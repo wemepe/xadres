@@ -17,7 +17,7 @@ public class ChessMatch {
 	private Board board;
 	
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
-	private List<Piece> CapturedPieces = new ArrayList<>();
+	private List<Piece> capturedPieces = new ArrayList<>();
 	
 	public ChessMatch() {
 		board = new Board(8,8);
@@ -67,9 +67,20 @@ public class ChessMatch {
 		
 		if (capturedPiece != null) {
 			piecesOnTheBoard.remove(capturedPiece);
-			CapturedPieces.add(capturedPiece);
+			capturedPieces.add(capturedPiece);
 		}
 		return capturedPiece;
+	}
+	
+	private void undoMove(Position source, Position target, Piece capturedPiece) {
+		Piece p = board.removePiece(target);
+		board.placePiece(p, source);
+		
+		if (capturedPiece !=null) {
+			board.placePiece(capturedPiece, target);
+			capturedPieces.remove(capturedPiece);
+			piecesOnTheBoard.add(capturedPiece);
+		}
 	}
 	
 	private void validateSourcePosition(Position position) {
